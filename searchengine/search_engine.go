@@ -14,7 +14,8 @@ type SearchEngine struct {
 	Index        InvertedIndex
 	Documents    []documents.Document
 	AvgDocLength float64
-	K1, B        float64
+	K1           float64
+	B            float64
 }
 
 /**
@@ -51,9 +52,12 @@ func BuildInvertedIndex(documents []documents.Document) InvertedIndex {
 func (se *SearchEngine) CalculateTFIDFScore(tokens []string) map[int]float64 {
 	scores := make(map[int]float64)
 
+	// iterate all tokens in the query
 	for _, token := range tokens {
 		if docSet, ok := se.Index[token]; ok {
 			idf := math.Log(float64(len(se.Documents)) / float64(len(docSet)))
+
+			// iterate all document that contains the token
 			for _, docID := range docSet {
 				tf := float64(strings.Count(strings.ToLower(se.Documents[docID].Content), token))
 				scores[docID] += tf * idf
@@ -74,9 +78,12 @@ func (se *SearchEngine) CalculateTFIDFScore(tokens []string) map[int]float64 {
 func (se *SearchEngine) CalculateBM25Score(tokens []string) map[int]float64 {
 	scores := make(map[int]float64)
 
+	// iterate all tokens in the query
 	for _, token := range tokens {
 		if docSet, ok := se.Index[token]; ok {
 			idf := math.Log(float64(len(se.Documents)-len(docSet))+0.5) / (float64(len(docSet)) + 0.5)
+
+			// iterate all document that contains the token
 			for _, docID := range docSet {
 				tf := float64(strings.Count(strings.ToLower(se.Documents[docID].Content), token))
 				dl := float64(len(strings.Fields(strings.ToLower(se.Documents[docID].Content))))
