@@ -5,6 +5,8 @@ import (
 	"sort"
 	"strings"
 
+	stopwords "github.com/bbalet/stopwords"
+
 	documents "go4search/documents"
 )
 
@@ -91,10 +93,15 @@ func (se *SearchEngine) CalculateBM25Score(tokens []string) map[int]float64 {
 }
 
 func (se *SearchEngine) Search(query string) []documents.Document {
-	tokens := strings.Fields(strings.ToLower(query))
+	// remove stopwords from the query
+	cleaned_query := stopwords.CleanString(query, "en", true)
+
+	// tokenize the query
+	tokens := strings.Fields(strings.ToLower(cleaned_query))
+
 	scores := se.CalculateTFIDFScore(tokens)
 	// or, to use bm25 scoring algorithm:
-	// scores := se.CalculateBM25Score(tokens)
+	// scores_bm25 := se.CalculateBM25Score(tokens)
 
 	var results []documents.Document
 	for docID, score := range scores {
