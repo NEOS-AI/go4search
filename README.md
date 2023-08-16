@@ -2,8 +2,7 @@
 
 Golang based search engine implementation.
 
-## ToDo
+## References
 
-[v] Inverted Index
-[v] TF-IDF
-[v] BM25
+- [blurfx/mini-search-engine](https://github.com/blurfx/mini-search-engine)
+- [System Design for Discovery](https://eugeneyan.com/writing/system-design-for-discovery/)
