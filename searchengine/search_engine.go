@@ -8,38 +8,12 @@ import (
 	documents "go4search/documents"
 )
 
-type InvertedIndex map[string][]int
-
 type SearchEngine struct {
 	Index        InvertedIndex
 	Documents    []documents.Document
 	AvgDocLength float64
 	K1           float64
 	B            float64
-}
-
-/**
- * Build an inverted index by tokenizing the documents and storing the doucment IDs to key-value store.
- * The key is the token, and the value is a slice of document IDs.
- *
- * @param documents A slice of documents
- * @return InvertedIndex
- */
-func BuildInvertedIndex(documents []documents.Document) InvertedIndex {
-	index := make(InvertedIndex)
-
-	for _, doc := range documents {
-		tokens := strings.Fields(strings.ToLower(doc.Content))
-
-		for _, token := range tokens {
-			if _, ok := index[token]; !ok {
-				index[token] = make([]int, 0)
-			}
-			index[token] = append(index[token], doc.ID)
-		}
-	}
-
-	return index
 }
 
 /**
