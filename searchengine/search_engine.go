@@ -17,6 +17,13 @@ type SearchEngine struct {
 	K1, B        float64
 }
 
+/**
+ * Build an inverted index by tokenizing the documents and storing the doucment IDs to key-value store.
+ * The key is the token, and the value is a slice of document IDs.
+ *
+ * @param documents A slice of documents
+ * @return InvertedIndex
+ */
 func BuildInvertedIndex(documents []documents.Document) InvertedIndex {
 	index := make(InvertedIndex)
 
@@ -34,6 +41,13 @@ func BuildInvertedIndex(documents []documents.Document) InvertedIndex {
 	return index
 }
 
+/**
+ * Calculate the TF-IDF score for each document.
+ * Iterate all the tokens (extracted from user input query), and calculate the TF-IDF score for each document.
+ *
+ * @param tokens A slice of tokens
+ * @return map[int]float64
+ */
 func (se *SearchEngine) CalculateTFIDFScore(tokens []string) map[int]float64 {
 	scores := make(map[int]float64)
 
@@ -50,6 +64,13 @@ func (se *SearchEngine) CalculateTFIDFScore(tokens []string) map[int]float64 {
 	return scores
 }
 
+/**
+ * Calculate the BM25 score for each document.
+ * Iterate all the tokens (extracted from user input query), and calculate the BM25 score for each document.
+ *
+ * @param tokens A slice of tokens
+ * @return map[int]float64
+ */
 func (se *SearchEngine) CalculateBM25Score(tokens []string) map[int]float64 {
 	scores := make(map[int]float64)
 
@@ -86,11 +107,15 @@ func (se *SearchEngine) Search(query string) []documents.Document {
 			},
 		)
 	}
+
+	// sort the results by score in descending order
 	sort.Slice(results, func(i, j int) bool {
 		return results[i].Score > results[j].Score
 	})
+
+	// return the at most top 10 results
 	if len(results) > 10 {
-		results = results[:10]
+		return results[:10]
 	}
 	return results
 }
