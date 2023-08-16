@@ -10,6 +10,8 @@ import (
 	searchengine "go4search/searchengine"
 )
 
+var SearchEngine searchengine.SearchEngine
+
 func main() {
 	docs := []documents.Document{
 		{ID: 0, Content: "Lorem ipsum blah blah fox"},
@@ -51,7 +53,8 @@ func main() {
 		docLength += float64(len(doc.Content))
 	}
 
-	searchEngine := searchengine.SearchEngine{
+	// initialize the search engine
+	SearchEngine = searchengine.SearchEngine{
 		Index:        index,
 		Documents:    docs,
 		AvgDocLength: docLength / float64(len(docs)),
@@ -67,7 +70,7 @@ func main() {
 		if query == "" {
 			break
 		}
-		results := searchEngine.Search(query)
+		results := SearchEngine.Search(query)
 		fmt.Printf("%d results for query '%s':\n", len(results), query)
 		for _, result := range results {
 			fmt.Printf("- %s (score=%.2f)\n", result.Content, result.Score)
