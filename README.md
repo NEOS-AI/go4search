@@ -4,6 +4,6 @@ Golang based search engine implementation.
 
 ## ToDo
 
-[ ] Inverted Index
-[ ] TF-IDF
-[ ] BM25
+[v] Inverted Index
+[v] TF-IDF
+[v] BM25
