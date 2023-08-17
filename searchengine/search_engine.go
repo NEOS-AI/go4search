@@ -16,6 +16,9 @@ type SearchEngine struct {
 	B            float64
 }
 
+const BM25_WEIGHT = 0.5
+const TFIDF_WEIGHT = 0.5
+
 /**
  * Calculate the TF-IDF score for each document.
  * Iterate all the tokens (extracted from user input query), and calculate the TF-IDF score for each document.
@@ -34,7 +37,9 @@ func (se *SearchEngine) CalculateTFIDFScore(tokens []string) map[int]float64 {
 			// iterate all document that contains the token
 			for _, docID := range docSet {
 				tf := float64(strings.Count(strings.ToLower(se.Documents[docID].Content), token))
-				scores[docID] += tf * idf
+
+				// TF-IDF score * weight
+				scores[docID] += tf * idf * TFIDF_WEIGHT
 			}
 		}
 	}
@@ -63,7 +68,11 @@ func (se *SearchEngine) CalculateBM25Score(tokens []string) map[int]float64 {
 				dl := float64(len(strings.Fields(strings.ToLower(se.Documents[docID].Content))))
 				numerator := (se.K1 + 1) * tf * (se.K1 + 1) / (tf + se.K1*(1.0-se.B+se.B*dl/se.AvgDocLength))
 				denominator := tf + se.K1*(1.0-se.B+se.B*dl/se.AvgDocLength)
-				scores[docID] += idf * numerator / denominator
+
+				// BM25 score
+				score := idf * numerator / denominator
+				// apply weight to the score
+				scores[docID] += score * BM25_WEIGHT
 			}
 		}
 	}
@@ -78,9 +87,15 @@ func (se *SearchEngine) Search(query string) []documents.Document {
 	// tokenize the query
 	tokens := strings.Fields(strings.ToLower(cleaned_query))
 
+	// ranking with TF-IDF
 	scores := se.CalculateTFIDFScore(tokens)
-	// or, to use bm25 scoring algorithm:
-	// scores_bm25 := se.CalculateBM25Score(tokens)
+	// ranking with BM25
+	scores_bm25 := se.CalculateBM25Score(tokens)
+
+	// combine the scores from TF-IDF and BM25 for weighted ranking
+	for docID, score := range scores_bm25 {
+		scores[docID] += score
+	}
 
 	var results []documents.Document
 	for docID, score := range scores {
