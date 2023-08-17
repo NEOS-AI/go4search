@@ -2,6 +2,10 @@
 
 Golang based search engine implementation.
 
+## ToDos
+
+* [ ] Levenshtein Distance Spell Correction
+
 ## References
 
 - [blurfx/mini-search-engine](https://github.com/blurfx/mini-search-engine)
