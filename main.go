@@ -70,7 +70,7 @@ func main() {
 		query, _ := bufio.NewReader(os.Stdin).ReadString('\n')
 		query = strings.TrimSpace(query)
 		if query == "" {
-			break
+			continue
 		}
 		results := SearchEngine.Search(query)
 		fmt.Printf("%d results for query '%s':\n", len(results), query)

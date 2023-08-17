@@ -14,7 +14,7 @@ func removeStopwords(query string) string {
 
 	cleaned_query := stopwords.CleanString(query, language, true)
 	if cleaned_query == "" {
-		cleaned_query = query
+		return query
 	}
 	return cleaned_query
 }
