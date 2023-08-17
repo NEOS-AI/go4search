@@ -12,7 +12,7 @@ import (
 
 var SearchEngine searchengine.SearchEngine
 
-func main() {
+func init() {
 	docs := []documents.Document{
 		{ID: 0, Content: "Lorem ipsum blah blah fox"},
 		{ID: 1, Content: "The quick brown fox jumped over the lazy dog. The dog slept peacefully."},
@@ -61,7 +61,9 @@ func main() {
 		K1:           1.2,
 		B:            0.75,
 	}
+}
 
+func main() {
 	// run endless loop to accept search queries from the user
 	for {
 		fmt.Print("Enter a search query: ")
