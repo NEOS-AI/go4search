@@ -80,7 +80,7 @@ func (se *SearchEngine) CalculateBM25Score(tokens []string) map[int]float64 {
 	return scores
 }
 
-func (se *SearchEngine) Search(query string) []documents.Document {
+func (se *SearchEngine) Search(query string, limit int) []documents.Document {
 	// remove stopwords from the query
 	cleaned_query := removeStopwords(query)
 
@@ -116,9 +116,9 @@ func (se *SearchEngine) Search(query string) []documents.Document {
 		return results[i].Score > results[j].Score
 	})
 
-	// return the at most top 10 results
-	if len(results) > 10 {
-		return results[:10]
+	// return the at most top N results
+	if len(results) > limit {
+		return results[:limit]
 	}
 	return results
 }

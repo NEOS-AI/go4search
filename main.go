@@ -72,7 +72,7 @@ func main() {
 		if query == "" {
 			continue
 		}
-		results := SearchEngine.Search(query)
+		results := SearchEngine.Search(query, 20)
 		fmt.Printf("%d results for query '%s':\n", len(results), query)
 		for _, result := range results {
 			fmt.Printf("- %s (score=%.2f)\n", result.Content, result.Score)
