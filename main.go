@@ -64,6 +64,8 @@ func init() {
 }
 
 func main() {
+	//TODO clustering 기법을 통해 각 토큰을 semantic cluster로 묶어서 대표 토큰을 선정하고, 이를 inverted index key-value store의 key로 사용하기
+
 	// run endless loop to accept search queries from the user
 	for {
 		fmt.Print("Enter a search query: ")

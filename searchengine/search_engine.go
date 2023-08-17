@@ -87,8 +87,6 @@ func (se *SearchEngine) Search(query string, limit int) []documents.Document {
 	// tokenize the query
 	tokens := strings.Fields(strings.ToLower(cleaned_query))
 
-	//TODO typo correction by Levenshtein distance
-
 	// ranking with TF-IDF
 	scores := se.CalculateTFIDFScore(tokens)
 	// ranking with BM25
