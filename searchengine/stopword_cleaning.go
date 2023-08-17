@@ -1,11 +1,18 @@
 package searchengine
 
 import (
-	stopwords "github.com/bbalet/stopwords"
+	"github.com/bbalet/stopwords"
+
+	nlp "go4search/nlp"
 )
 
 func removeStopwords(query string) string {
-	cleaned_query := stopwords.CleanString(query, "en", true)
+	language, isExist := nlp.DetectLanguage(query)
+	if !isExist {
+		return query
+	}
+
+	cleaned_query := stopwords.CleanString(query, language, true)
 	if cleaned_query == "" {
 		cleaned_query = query
 	}
