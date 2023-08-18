@@ -11,3 +11,5 @@ Golang based search engine implementation.
 
 - [blurfx/mini-search-engine](https://github.com/blurfx/mini-search-engine)
 - [System Design for Discovery](https://eugeneyan.com/writing/system-design-for-discovery/)
+- [🤗 bert-base-multilingual-cased](https://huggingface.co/bert-base-multilingual-cased)
+- [sugarme/tokenizer](https://pkg.go.dev/github.com/sugarme/tokenizer)
