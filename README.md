@@ -14,6 +14,12 @@ Golang based search engine implementation.
     * Stopword Removal
     * Language Detection
 
+## Profiling and Tracing
+
+Basically, this application uses `net/http/pprof` for profiling and tracing.
+
+For visualizing the profiling and tracing, open `http://localhost:6060/debug/pprof/` in your browser.
+
 ## ToDos
 
 * [ ] Levenshtein Distance Spell Correction

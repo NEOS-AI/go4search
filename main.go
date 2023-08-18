@@ -3,6 +3,9 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"net/http"
+	"net/http/pprof"
+	_ "net/http/pprof"
 	"os"
 	"strings"
 
@@ -66,10 +69,19 @@ func init() {
 		K1:           1.2,
 		B:            0.75,
 	}
+
+	http.Handle("/debug/pprof/", http.HandlerFunc(pprof.Index))
+	http.Handle("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
+	http.Handle("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
+	http.Handle("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
+	http.Handle("/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
 }
 
 func main() {
-	//TODO clustering 기법을 통해 각 토큰을 semantic cluster로 묶어서 대표 토큰을 선정하고, 이를 inverted index key-value store의 key로 사용하기
+	// start the pprof server
+	go func() {
+		fmt.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
 
 	// run endless loop to accept search queries from the user
 	for {
