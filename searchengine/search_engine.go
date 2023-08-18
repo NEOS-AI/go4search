@@ -17,6 +17,8 @@ type SearchEngine struct {
 	B            float64
 }
 
+const SCORE_THRESHOLD = 0.5
+
 const BM25_WEIGHT = 0.5
 const TFIDF_WEIGHT = 0.5
 
@@ -101,6 +103,11 @@ func (se *SearchEngine) Search(query string, limit int) []documents.Document {
 
 	var results []documents.Document
 	for docID, score := range scores {
+		// filter out the results with score less than SCORE_THRESHOLD
+		if score < SCORE_THRESHOLD {
+			continue
+		}
+
 		results = append(
 			results,
 			documents.Document{

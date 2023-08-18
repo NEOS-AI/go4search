@@ -3,9 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
+
 	"net/http"
-	"net/http/pprof"
 	_ "net/http/pprof"
+
 	"os"
 	"strings"
 
@@ -69,18 +70,12 @@ func init() {
 		K1:           1.2,
 		B:            0.75,
 	}
-
-	http.Handle("/debug/pprof/", http.HandlerFunc(pprof.Index))
-	http.Handle("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
-	http.Handle("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
-	http.Handle("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
-	http.Handle("/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
 }
 
 func main() {
 	// start the pprof server
 	go func() {
-		fmt.Println(http.ListenAndServe("localhost:6060", nil))
+		fmt.Println(http.ListenAndServe("0.0.0.0:6060", nil))
 	}()
 
 	// run endless loop to accept search queries from the user
