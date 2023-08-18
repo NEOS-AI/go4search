@@ -2,10 +2,22 @@
 
 Golang based search engine implementation.
 
+## Implemented Features
+
+* Indexing
+    * Inverted Index
+* Search
+    * TF-IDF
+    * BM25
+* Natural Language Processing
+    * Subword Tokenization
+    * Stopword Removal
+    * Language Detection
+
 ## ToDos
 
 * [ ] Levenshtein Distance Spell Correction
-* [v] Semantic Token Clustering for semantic search
+* [ ] Pseudo Relevance Feedback
 
 ## References
 
