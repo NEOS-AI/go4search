@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	documents "go4search/documents"
+	nlp "go4search/nlp"
 )
 
 type SearchEngine struct {
@@ -85,7 +86,8 @@ func (se *SearchEngine) Search(query string, limit int) []documents.Document {
 	cleaned_query := removeStopwords(query)
 
 	// tokenize the query
-	tokens := strings.Fields(strings.ToLower(cleaned_query))
+	// tokens := strings.Fields(strings.ToLower(cleaned_query))
+	tokens := nlp.Tokenize_Query(strings.ToLower(cleaned_query))
 
 	// ranking with TF-IDF
 	scores := se.CalculateTFIDFScore(tokens)

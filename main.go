@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	documents "go4search/documents"
+	nlp "go4search/nlp"
 	searchengine "go4search/searchengine"
 )
 
@@ -45,7 +46,11 @@ func init() {
 		{ID: 28, Content: "As Gregor Samsa awoke one morning from uneasy dreams he found himself transformed in his bed into a gigantic insect."},
 		{ID: 29, Content: "Call me Ishmael. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world."},
 		{ID: 30, Content: "It was the day my grandmother exploded."},
+		{ID: 31, Content: "아이유(IU, 본명: 이지은, 李知恩, 1993년 5월 16일~)는 대한민국의 가수이자 배우이다. 배우로 활동할 때도 예명을 사용한다. '아이유(IU)'라는 예명은 'I'와 'You'를 합친 합성어로 '너와 내가 음악으로 하나가 된다'라는 의미이다"},
 	}
+
+	// initialize the tokenizer
+	nlp.Init_Tokenizer()
 
 	index := searchengine.BuildInvertedIndex(docs)
 	docLength := 0.

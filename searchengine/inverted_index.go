@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	documents "go4search/documents"
+	nlp "go4search/nlp"
 )
 
 type InvertedIndex map[string][]int
@@ -20,7 +21,8 @@ func BuildInvertedIndex(documents []documents.Document) InvertedIndex {
 
 	// iterate all documents
 	for _, doc := range documents {
-		tokens := strings.Fields(strings.ToLower(doc.Content))
+		// tokens := strings.Fields(strings.ToLower(doc.Content))
+		tokens := nlp.Tokenize_Query(strings.ToLower(doc.Content))
 
 		// iterate all tokens in the document, and store the document ID to the key-value store
 		for _, token := range tokens {
