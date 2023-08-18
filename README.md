@@ -5,7 +5,7 @@ Golang based search engine implementation.
 ## ToDos
 
 * [ ] Levenshtein Distance Spell Correction
-* [ ] Semantic Token Clustering for semantic search
+* [v] Semantic Token Clustering for semantic search
 
 ## References
 
