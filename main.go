@@ -13,6 +13,9 @@ import (
 	documents "go4search/documents"
 	nlp "go4search/nlp"
 	searchengine "go4search/searchengine"
+
+	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 var SearchEngine searchengine.SearchEngine
@@ -77,6 +80,9 @@ func main() {
 	go func() {
 		fmt.Println(http.ListenAndServe("0.0.0.0:6060", nil))
 	}()
+
+	app := fiber.New()
+	app.Use(cors.New())
 
 	// run endless loop to accept search queries from the user
 	for {
