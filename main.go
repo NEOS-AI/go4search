@@ -79,14 +79,17 @@ func init() {
 	if count == 0 {
 		panic("No documents to index")
 	}
+	count_f := float64(count)
 
 	// initialize the search engine
 	SearchEngine = searchengine.SearchEngine{
-		Index:        index,
-		Documents:    docs,
-		AvgDocLength: docLength / float64(count),
-		K1:           1.2,
-		B:            0.75,
+		Index:         index,
+		Documents:     docs,
+		TotalDocCount: count_f,
+		TotalDocLen:   docLength,
+		AvgDocLength:  docLength / count_f,
+		K1:            1.2,
+		B:             0.75,
 	}
 }
 

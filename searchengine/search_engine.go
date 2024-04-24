@@ -10,17 +10,49 @@ import (
 )
 
 type SearchEngine struct {
-	Index        InvertedIndex
-	Documents    []documents.Document
-	AvgDocLength float64
-	K1           float64
-	B            float64
+	Index         InvertedIndex
+	Documents     []documents.Document
+	TotalDocCount float64
+	TotalDocLen   float64
+	AvgDocLength  float64
+	K1            float64
+	B             float64
 }
 
 const SCORE_THRESHOLD = 0.5
 
 const BM25_WEIGHT = 0.5
 const TFIDF_WEIGHT = 0.5
+
+func (se *SearchEngine) SetK1(k1 float64) {
+	se.K1 = k1
+}
+
+func (se *SearchEngine) SetB(b float64) {
+	se.B = b
+}
+
+func (se *SearchEngine) AddNewDocument(doc documents.Document) {
+	se.Documents = append(se.Documents, doc)
+	count := se.TotalDocCount
+	docLength := se.TotalDocLen
+
+	currentDocLength := float64(len(doc.Content))
+	// check if docLength + currentDocLength is too large to avoid overflow
+	if docLength+currentDocLength > math.MaxFloat64-100 {
+		return
+	}
+
+	// increase the docLength
+	docLength += currentDocLength
+	count++
+	count_f := float64(count)
+
+	// update the search engine
+	se.TotalDocCount = count_f
+	se.TotalDocLen = docLength
+	se.AvgDocLength = docLength / count_f
+}
 
 /**
  * Calculate the TF-IDF score for each document.
