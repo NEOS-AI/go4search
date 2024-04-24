@@ -60,7 +60,8 @@ func init() {
 	// initialize the tokenizer
 	nlp.Init_Tokenizer()
 
-	index := searchengine.BuildInvertedIndex(docs)
+	use_tokenizer := true
+	index := searchengine.BuildInvertedIndex(docs, use_tokenizer)
 	docLength := 0.
 	count := 0
 	maxThreshold := math.MaxFloat64 - 100
