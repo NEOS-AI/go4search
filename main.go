@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 
 	"net/http"
 	_ "net/http/pprof"
@@ -61,15 +62,28 @@ func init() {
 
 	index := searchengine.BuildInvertedIndex(docs)
 	docLength := 0.
+	count := 0
 	for _, doc := range docs {
+		currentDocLength := float64(len(doc.Content))
+		// check if docLength + currentDocLength is too large to avoid overflow
+		if docLength+currentDocLength > math.MaxFloat64 {
+			break
+		}
+
+		// increase the docLength
 		docLength += float64(len(doc.Content))
+		count++
+	}
+	// to avoid division by zero
+	if count == 0 {
+		panic("No documents to index")
 	}
 
 	// initialize the search engine
 	SearchEngine = searchengine.SearchEngine{
 		Index:        index,
 		Documents:    docs,
-		AvgDocLength: docLength / float64(len(docs)),
+		AvgDocLength: docLength / float64(count),
 		K1:           1.2,
 		B:            0.75,
 	}
