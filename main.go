@@ -63,15 +63,16 @@ func init() {
 	index := searchengine.BuildInvertedIndex(docs)
 	docLength := 0.
 	count := 0
+	maxThreshold := math.MaxFloat64 - 100
 	for _, doc := range docs {
 		currentDocLength := float64(len(doc.Content))
 		// check if docLength + currentDocLength is too large to avoid overflow
-		if docLength+currentDocLength > math.MaxFloat64 {
+		if docLength+currentDocLength > maxThreshold {
 			break
 		}
 
 		// increase the docLength
-		docLength += float64(len(doc.Content))
+		docLength += currentDocLength
 		count++
 	}
 	// to avoid division by zero
