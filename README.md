@@ -22,8 +22,11 @@ For visualizing the profiling and tracing, open `http://localhost:6060/debug/ppr
 
 ## ToDos
 
+* [ ] Build index from reading and parsing raw text files
+* [ ] Save data to file (dump and load)
 * [ ] Levenshtein Distance Spell Correction
 * [ ] Pseudo Relevance Feedback
+* [ ] Query Expansion
 
 ## References
 
