@@ -24,7 +24,7 @@ For visualizing the profiling and tracing, open `http://localhost:6060/debug/ppr
 
 * [v] Use bloomfilter for filtering the UNK tokens
 * [ ] Build index from reading and parsing raw text files
-* [ ] Save data to file (dump and load)
+* [ ] Save and load index and bloom filters to file
 * [ ] Build fuzzy full-text search by using SuffixTree
 * [ ] Levenshtein Distance Spell Correction
 * [ ] Pseudo Relevance Feedback
