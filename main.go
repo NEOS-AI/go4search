@@ -16,12 +16,12 @@ import (
 	searchengine "go4search/searchengine"
 
 	"github.com/gofiber/fiber"
-	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 var SearchEngine searchengine.SearchEngine
 
 func init() {
+	// docs := ParseFetchAndReturnDocuments()
 	docs := []documents.Document{
 		{ID: 0, Content: "Lorem ipsum blah blah fox"},
 		{ID: 1, Content: "The quick brown fox jumped over the lazy dog. The dog slept peacefully."},
@@ -56,6 +56,7 @@ func init() {
 		{ID: 30, Content: "It was the day my grandmother exploded."},
 		{ID: 31, Content: "아이유(IU, 본명: 이지은, 李知恩, 1993년 5월 16일~)는 대한민국의 가수이자 배우이다. 배우로 활동할 때도 예명을 사용한다. '아이유(IU)'라는 예명은 'I'와 'You'를 합친 합성어로 '너와 내가 음악으로 하나가 된다'라는 의미이다"},
 	}
+	SaveDocsAsCsv(docs, "data/result.csv")
 
 	// initialize the tokenizer
 	nlp.Init_Tokenizer()
@@ -102,7 +103,16 @@ func main() {
 	}()
 
 	app := fiber.New()
-	app.Use(cors.New())
+	// app.Use(cors.New())
+	app.Get("/search", func(c *fiber.Ctx) {
+		query := c.Query("q")
+		if query == "" {
+			c.Status(400).Send("No query provided")
+			return
+		}
+		results := SearchEngine.Search(query, 20)
+		c.JSON(results)
+	})
 
 	// run endless loop to accept search queries from the user
 	for {

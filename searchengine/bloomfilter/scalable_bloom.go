@@ -17,6 +17,26 @@ type ScalableBloomFilter struct {
 	fpGrowth float64        // Factor by which the false positive probability should increase for each additional filter slice
 }
 
+func (sbf *ScalableBloomFilter) Count() uint64 {
+	return sbf.n
+}
+
+func (sbf *ScalableBloomFilter) GetFalsePositiveRate() float64 {
+	return sbf.fpRate
+}
+
+func (sbf *ScalableBloomFilter) GetFalsePositiveGrowth() float64 {
+	return sbf.fpGrowth
+}
+
+func (sbf *ScalableBloomFilter) GetFilters() []*BloomFilter {
+	return sbf.filters
+}
+
+func (sbf *ScalableBloomFilter) SetFilters(filters []*BloomFilter) {
+	sbf.filters = filters
+}
+
 // ParamsScalable represents the parameters for creating a new scalable Bloom filter.
 type ParamsScalable struct {
 	// InitialSize is the estimated number of elements you expect to store in the bloom filter initially.
