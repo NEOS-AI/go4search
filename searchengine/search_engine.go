@@ -7,6 +7,7 @@ import (
 
 	documents "go4search/documents"
 	nlp "go4search/nlp"
+	bloomfilter "go4search/searchengine/bloomfilter"
 )
 
 type SearchEngine struct {
@@ -17,6 +18,7 @@ type SearchEngine struct {
 	AvgDocLength  float64
 	K1            float64
 	B             float64
+	Bloomfilter   *bloomfilter.ScalableBloomFilter
 }
 
 const SCORE_THRESHOLD = 0.5
@@ -32,6 +34,13 @@ func (se *SearchEngine) SetB(b float64) {
 	se.B = b
 }
 
+/**
+ * Add a new document to the search engine.
+ * Update the inverted index and the bloom filter.
+ * Internally checks if the total document length is not too large to avoid overflow.
+ *
+ * @param doc A document
+ */
 func (se *SearchEngine) AddNewDocument(doc documents.Document) {
 	se.Documents = append(se.Documents, doc)
 	count := se.TotalDocCount
@@ -43,15 +52,18 @@ func (se *SearchEngine) AddNewDocument(doc documents.Document) {
 		return
 	}
 
+	// update the inverted index and the bloom filter
+	UpdateInvertedIndexWithDoc(se.Index, doc, true, se.Bloomfilter)
+
 	// increase the docLength
 	docLength += currentDocLength
 	count++
-	count_f := float64(count)
+	countF := float64(count)
 
 	// update the search engine
-	se.TotalDocCount = count_f
+	se.TotalDocCount = countF
 	se.TotalDocLen = docLength
-	se.AvgDocLength = docLength / count_f
+	se.AvgDocLength = docLength / countF
 }
 
 /**
@@ -115,21 +127,49 @@ func (se *SearchEngine) CalculateBM25Score(tokens []string) map[int]float64 {
 	return scores
 }
 
+/**
+ * Search for documents based on the user input query.
+ * Remove stopwords from the query, tokenize the query, and filter out the tokens that are not in the Bloom filter.
+ * Calculate the TF-IDF score and BM25 score for each document.
+ * Combine the scores with a weighted sum, and return the top N results.
+ *
+ * @param query A search query
+ * @param limit The maximum number of results to return
+ *
+ * @return []documents.Document
+ */
 func (se *SearchEngine) Search(query string, limit int) []documents.Document {
 	// remove stopwords from the query
-	cleaned_query := removeStopwords(query)
+	cleanedQuery := removeStopwords(query)
 
 	// tokenize the query
-	// tokens := strings.Fields(strings.ToLower(cleaned_query))
-	tokens := nlp.Tokenize_Query(strings.ToLower(cleaned_query))
+	// tokens := strings.Fields(strings.ToLower(cleanedQuery))
+	tokens := nlp.Tokenize_Query(strings.ToLower(cleanedQuery))
+
+	// Check if all tokens are not in the Bloom filter
+	// Filter out present tokens only
+	allTokensNotPresent := true
+	presentTokens := make([]string, 0)
+	for _, token := range tokens {
+		present, _ := se.Bloomfilter.Test([]byte(token))
+		if present {
+			allTokensNotPresent = false
+			presentTokens = append(presentTokens, token)
+		}
+	}
+
+	// if all tokens are not in the Bloom filter, return empty results
+	if allTokensNotPresent {
+		return []documents.Document{}
+	}
 
 	// ranking with TF-IDF
-	scores := se.CalculateTFIDFScore(tokens)
+	scores := se.CalculateTFIDFScore(presentTokens)
 	// ranking with BM25
-	scores_bm25 := se.CalculateBM25Score(tokens)
+	scoresBm25 := se.CalculateBM25Score(presentTokens)
 
 	// combine the scores from TF-IDF and BM25 for weighted ranking
-	for docID, score := range scores_bm25 {
+	for docID, score := range scoresBm25 {
 		scores[docID] += score
 	}
 

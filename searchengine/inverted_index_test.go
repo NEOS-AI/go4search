@@ -25,7 +25,7 @@ func TestBuildInvertedIndex(t *testing.T) {
 	documents := []documents.Document{doc1, doc2, doc3}
 
 	// Call the BuildInvertedIndex function
-	invertedIndex := BuildInvertedIndex(documents, false)
+	invertedIndex, _ := BuildInvertedIndex(documents, false)
 
 	// Perform assertions to verify the correctness of the inverted index
 

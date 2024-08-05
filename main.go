@@ -60,8 +60,8 @@ func init() {
 	// initialize the tokenizer
 	nlp.Init_Tokenizer()
 
-	use_tokenizer := true
-	index := searchengine.BuildInvertedIndex(docs, use_tokenizer)
+	useTokenizer := true
+	index, sbf := searchengine.BuildInvertedIndex(docs, useTokenizer)
 	docLength := 0.
 	count := 0
 	maxThreshold := math.MaxFloat64 - 100
@@ -80,17 +80,18 @@ func init() {
 	if count == 0 {
 		panic("No documents to index")
 	}
-	count_f := float64(count)
+	countF := float64(count)
 
 	// initialize the search engine
 	SearchEngine = searchengine.SearchEngine{
 		Index:         index,
 		Documents:     docs,
-		TotalDocCount: count_f,
+		TotalDocCount: countF,
 		TotalDocLen:   docLength,
-		AvgDocLength:  docLength / count_f,
+		AvgDocLength:  docLength / countF,
 		K1:            1.2,
 		B:             0.75,
+		Bloomfilter:   sbf,
 	}
 }
 
