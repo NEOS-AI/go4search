@@ -24,6 +24,7 @@ For visualizing the profiling and tracing, open `http://localhost:6060/debug/ppr
 
 * [ ] Build index from reading and parsing raw text files
 * [ ] Save data to file (dump and load)
+* [ ] Build fuzzy full-text search by using SuffixTree
 * [ ] Levenshtein Distance Spell Correction
 * [ ] Pseudo Relevance Feedback
 * [ ] Query Expansion
